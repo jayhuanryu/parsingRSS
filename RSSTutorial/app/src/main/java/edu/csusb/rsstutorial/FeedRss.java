@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -54,6 +55,7 @@ public class FeedRss extends AsyncTask<Void, Void, Void> {
     private void ProcessXml(Document data) {
         Log.d("ROOT", data.getDocumentElement().getNodeName());
         if (data!=null) {
+            ArrayList<FeedItem> arraylist = new ArrayList<>();
             Element root = data.getDocumentElement();
             Node channel = root.getChildNodes().item(1);
             NodeList items = channel.getChildNodes();
@@ -61,10 +63,29 @@ public class FeedRss extends AsyncTask<Void, Void, Void> {
                 Node currentchild = items.item(i);
                 if (currentchild.getNodeName().equalsIgnoreCase("item")) {
                     NodeList itemchilds = currentchild.getChildNodes();
+                    FeedItem item = new FeedItem();
                     for (int j = 0 ; j < itemchilds.getLength(); j++) {
                         Node current = itemchilds.item(j);
-                        Log.d("textcontent", current.getTextContent());
+                        if (current.getNodeName().equalsIgnoreCase("title")) {
+                             item.setTitle(current.getTextContent());
+                        } else if (current.getNodeName().equalsIgnoreCase("link")) {
+                            item.setLink(current.getTextContent());
+                        } else if ( current.getNodeName().equalsIgnoreCase("description")) {
+                            item.setDescription(current.getTextContent());
+                        } else if (current.getNodeName().equalsIgnoreCase("pubDate")) {
+                            item.setPubDate(current.getTextContent());
+                        } else if (current.getNodeName().equalsIgnoreCase("media:thumbnail")) {
+                            //this will return us thumbnail url
+                            String url = current.getAttributes().item(0).getTextContent();
+                            item.setThumbnailURL(url);
+                        }
                     }
+                    arraylist.add(item);
+                    Log.d("itemTitle", item.getTitle());
+                    Log.d("itemLink", item.getLink());
+                    Log.d("itemDescription", item.getDescription());
+                    Log.d("itemPubDate", item.getPubDate();
+                    Log.d("itemMultimedia", item.getThumbnailURL());
                 }
             }
         }
