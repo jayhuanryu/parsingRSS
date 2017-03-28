@@ -6,6 +6,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -42,9 +45,29 @@ public class FeedRss extends AsyncTask<Void, Void, Void> {
         ProcessXml(getData());
         return null;
     }
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        progressDialog.dismiss();
+    }
 
     private void ProcessXml(Document data) {
         Log.d("ROOT", data.getDocumentElement().getNodeName());
+        if (data!=null) {
+            Element root = data.getDocumentElement();
+            Node channel = root.getChildNodes().item(1);
+            NodeList items = channel.getChildNodes();
+            for (int i = 0; i < items.getLength(); i++) {
+                Node currentchild = items.item(i);
+                if (currentchild.getNodeName().equalsIgnoreCase("item")) {
+                    NodeList itemchilds = currentchild.getChildNodes();
+                    for (int j = 0 ; j < itemchilds.getLength(); j++) {
+                        Node current = itemchilds.item(j);
+                        Log.d("textcontent", current.getTextContent());
+                    }
+                }
+            }
+        }
     }
 
     private Document getData() {
