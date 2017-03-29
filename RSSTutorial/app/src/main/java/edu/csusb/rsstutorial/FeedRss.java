@@ -26,10 +26,10 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 
 public class FeedRss extends AsyncTask<Void, Void, Void> {
-    Context context;
-    ProgressDialog progressDialog;
-    String address = "http://www.latimes.com/world/asia/rss2.0.xml";
-    URL url;
+    private Context context;
+    private ProgressDialog progressDialog;
+    private String address = "http://www.latimes.com/world/asia/rss2.0.xml";
+    private URL url;
 
     public FeedRss(Context context) {
         this.context = context;
@@ -54,7 +54,7 @@ public class FeedRss extends AsyncTask<Void, Void, Void> {
 
     private void ProcessXml(Document data) {
         Log.d("ROOT", data.getDocumentElement().getNodeName());
-        if (data!=null) {
+        if (data != null) {
             ArrayList<FeedItem> arraylist = new ArrayList<>();
             Element root = data.getDocumentElement();
             Node channel = root.getChildNodes().item(1);
@@ -84,7 +84,7 @@ public class FeedRss extends AsyncTask<Void, Void, Void> {
                     Log.d("itemTitle", item.getTitle());
                     Log.d("itemLink", item.getLink());
                     Log.d("itemDescription", item.getDescription());
-                    Log.d("itemPubDate", item.getPubDate();
+                    Log.d("itemPubDate", item.getPubDate());
                     Log.d("itemMultimedia", item.getThumbnailURL());
                 }
             }
@@ -99,9 +99,8 @@ public class FeedRss extends AsyncTask<Void, Void, Void> {
             InputStream inputStream = connection.getInputStream();
             DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = builderFactory.newDocumentBuilder();
-            Document xmlDoc = documentBuilder.parse(inputStream);
 
-            return xmlDoc;
+            return documentBuilder.parse(inputStream);
 
         } catch (IOException | ParserConfigurationException | SAXException e) {
             e.printStackTrace();
