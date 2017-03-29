@@ -3,6 +3,8 @@ package edu.csusb.rsstutorial;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import org.w3c.dom.Document;
@@ -30,9 +32,12 @@ public class FeedRss extends AsyncTask<Void, Void, Void> {
     private ProgressDialog progressDialog;
     private String address = "http://www.latimes.com/world/asia/rss2.0.xml";
     private URL url;
+    ArrayList<FeedItem> arraylist;
+    RecyclerView recyclerView;
 
-    public FeedRss(Context context) {
+    public FeedRss(Context context, RecyclerView recyclerView) {
         this.context = context;
+        this.recyclerView = recyclerView;
         progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Loading...");
     }
@@ -50,12 +55,15 @@ public class FeedRss extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         progressDialog.dismiss();
+        MyAdapter adapter = new MyAdapter(arraylist,context);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setAdapter(adapter);
     }
 
     private void ProcessXml(Document data) {
         Log.d("ROOT", data.getDocumentElement().getNodeName());
         if (data != null) {
-            ArrayList<FeedItem> arraylist = new ArrayList<>();
+            arraylist = new ArrayList<>();
             Element root = data.getDocumentElement();
             Node channel = root.getChildNodes().item(1);
             NodeList items = channel.getChildNodes();

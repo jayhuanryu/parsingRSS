@@ -2,6 +2,7 @@ package edu.csusb.rsstutorial;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -10,7 +11,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FeedRss feedRss = new FeedRss(this);
+        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+
+        FeedRss feedRss = new FeedRss(this, recyclerView);
         feedRss.execute();
     }
 }
